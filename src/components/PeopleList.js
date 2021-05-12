@@ -1,56 +1,59 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form } from "./Form";
 import { getPeopleList } from "../api/people";
 
-export class PeopleList extends React.Component {
-  constructor(props) {
-    super(props);
+const Columns = () =>
+  [
+    {
+      key: "name",
+    },
+    {
+      key: "birth_year",
+    },
+  ].map(({ key }) => <th key={key}>{key}</th>);
 
-    this.state = {
-      array: [],
-    };
-    this.updateComponent = this.updateComponent.bind(this);
-  }
-  updateComponent(name) {
+const People = ({ items }) => {
+  return items.length
+    ? items.map(({ name, birth_year }) => (
+        <tr key={name} className="bg-light">
+          <td>{name}</td>
+          <td>{birth_year}</td>
+        </tr>
+      ))
+    : null;
+};
+
+export function PeopleList() {
+  const [projects, setProjects] = useState([]);
+
+  const getPeople = useCallback((name = "") => {
     getPeopleList(name)
       .then(({ data }) => {
-        this.setState({ array: data.results });
+        setProjects(data.results);
       })
-      .catch((err) => {});
-  }
+      .catch((err) => {
+        console.error({ err });
+      });
+  }, []);
 
-  componentDidMount() {
-    this.updateComponent("");
-  }
+  useEffect(() => getPeople(), [getPeople]);
 
-  render() {
-    return (
-      <>
-        <Form callback={this.updateComponent} />
+  return (
+    <>
+      <Form callback={getPeople} />
 
-        <div className="table-responsive">
-          <table className="table table-sm table-inverse">
-            <thead>
-              <tr>
-                <th>name</th>
-                <th>birth_year</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderProjects()}</tbody>
-          </table>
-        </div>
-      </>
-    );
-  }
-
-  renderProjects = () => {
-    return this.state.array.map((projectOpts, i) => {
-      return (
-        <tr className="bg-light" key={projectOpts.name}>
-          <td>{projectOpts.name}</td>
-          <td>{projectOpts.birth_year}</td>
-        </tr>
-      );
-    });
-  };
+      <div className="table-responsive">
+        <table className="table table-sm table-inverse">
+          <thead>
+            <tr>
+              <Columns />
+            </tr>
+          </thead>
+          <tbody>
+            <People items={projects} />
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
 }
