@@ -1,21 +1,22 @@
-import React from 'react';
+import React from "react";
 
 export class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ''
+      name: "",
     };
-
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
 
@@ -29,11 +30,22 @@ export class Form extends React.Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" className="form-control mx-sm-2" id="quarterInput" name="nameInput" placeholder="" name="name" value={this.state.name} onChange={this.handleInputChange} />
+          <input
+            type="text"
+            className="form-control mx-sm-2"
+            id="quarterInput"
+            name="nameInput"
+            placeholder=""
+            name="name"
+            value={this.state.name}
+            onChange={this.handleInputChange}
+          />
           <br />
-          <button id="post-btn" type="submit" className="btn btn-primary my-1">Calculate</button>
+          <button id="post-btn" type="submit" className="btn btn-primary my-1">
+            Calculate
+          </button>
         </form>
       </div>
-    )
+    );
   }
 }

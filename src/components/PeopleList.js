@@ -1,61 +1,56 @@
-import React from 'react';
-import {Form} from './Form';
-import {getPeopleList} from '../api/people';
+import React from "react";
+import { Form } from "./Form";
+import { getPeopleList } from "../api/people";
 
 export class PeopleList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      array: []
+      array: [],
     };
+    this.updateComponent = this.updateComponent.bind(this);
   }
   updateComponent(name) {
-
     getPeopleList(name)
-      .then(({ data })=> {
-        this.setState(
-          { array: data.results }
-        );
+      .then(({ data }) => {
+        this.setState({ array: data.results });
       })
-      .catch((err)=> {})
+      .catch((err) => {});
   }
 
   componentDidMount() {
-    this.updateComponent('')
+    this.updateComponent("");
   }
 
   render() {
-    return(
+    return (
       <>
-        <Form callback = {this.updateComponent} />
+        <Form callback={this.updateComponent} />
 
         <div className="table-responsive">
           <table className="table table-sm table-inverse">
             <thead>
-            <tr>
-              <th>name</th>
-              <th>birth_year</th>
-            </tr>
+              <tr>
+                <th>name</th>
+                <th>birth_year</th>
+              </tr>
             </thead>
-            <tbody>
-            {this.renderProjects()}
-            </tbody>
+            <tbody>{this.renderProjects()}</tbody>
           </table>
         </div>
-
       </>
     );
   }
 
   renderProjects = () => {
-    return this.state.array.map((projectOpts, name) => {
+    return this.state.array.map((projectOpts, i) => {
       return (
-        <tr className="bg-light">
+        <tr className="bg-light" key={projectOpts.name}>
           <td>{projectOpts.name}</td>
           <td>{projectOpts.birth_year}</td>
         </tr>
       );
     });
-  }
+  };
 }
