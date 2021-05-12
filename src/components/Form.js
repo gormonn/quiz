@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 export function Form({ callback }) {
   const [name, setName] = useState("");
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = (e) => {
     setName(e.target.value);
-  }, []);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
